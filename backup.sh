@@ -19,11 +19,11 @@ command_exist() {
 
 # Check if zip is installed, and install it if not
 if command_exist zip; then
-  echo "Zip is installed!" | curl -d @- ntfy.sh/My-Backups
+  echo "Zip is installed!" | curl -d @- ntfy.sh/yoursubscribedchannel
 
  if ! command_exist zip; then
    echo "Zip is not installed Installing..."
-   curl -d "zip is not installed on $WEBSITE_NAME Server Installing..." ntfy.sh/My-Backups
+   curl -d "zip is not installed on $WEBSITE_NAME Server Installing..." ntfy.sh/yoursubscribedchannel
    if [ -x "$(command -v apt-get)" ]; then
      # Debian/Ubuntu
      sudo apt-get update
@@ -35,8 +35,7 @@ if command_exist zip; then
      # macOS with Homebrew
      brew install zip
    else
-     echo "Unsupported package manager. Please install zip manually." | curl -d @- ntfy.sh/My-Backups
-     #curl -d "Unsupported package manager. Please install zip manually." ntfy.sh/My-Backups
+     echo "Unsupported package manager. Please install zip manually." | curl -d @- ntfy.sh/yoursubscribedchannel
    fi
  fi
 fi
@@ -58,9 +57,9 @@ zip -r "$BACKUP_DIR/$ZIP_FILENAME" "$BACKUP_DIR/$(basename $WEBSITE_DIR)" "$BACK
 # Zip the website directory
 #cd "$WEBSITE_DIR" && zip -r "$BACKUP_DIR/$ZIP_FILENAME" . "$BACKUP_DIR/$DB_DUMP_FILENAME"
 
-# Print a message
-echo "Website directory and database ziped as $ZIP_FILENAME" | curl -d @- ntfy.sh/My-Backups
+# Print a message and send the notification to the ntfy.sh/yoursubscribedchannel
+echo "Website directory and database ziped as $ZIP_FILENAME" | curl -d @- ntfy.sh/yoursubscribedchannel
 
-
+# Backup the files to your Google Drive using gdrive, replace ID with the ID of your google drive file which you can easily get by running 'gdrive files list'
 gdrive files upload --parent ID "$BACKUP_DIR/$ZIP_FILENAME"
-curl -d "$WEBSITE_NAME website Backup Successful on $DATE" ntfy.sh/My-Backups
+curl -d "$WEBSITE_NAME website Backup Successful on $DATE" ntfy.sh/yoursubscribedchannel
