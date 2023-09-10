@@ -1,4 +1,4 @@
-# Linux-To-Gdrive-Backup-Bash-Script
+# Linux To Google Drive Backup Bash Script
 
 ## Overview
 
