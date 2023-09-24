@@ -18,27 +18,27 @@ command_exist() {
 }
 
 # Check if zip is installed, and install it if not
-if command_exist zip; then
-  echo "Zip is installed!" | curl -d @- ntfy.sh/yoursubscribedchannel
+#if command_exist zip; then
+#  echo "Zip is installed!" | curl -d @- ntfy.sh/yoursubscribedchannel
 
- if ! command_exist zip; then
-   echo "Zip is not installed Installing..."
-   curl -d "zip is not installed on $WEBSITE_NAME Server Installing..." ntfy.sh/yoursubscribedchannel
-   if [ -x "$(command -v apt-get)" ]; then
-     # Debian/Ubuntu
-     sudo apt-get update
-     sudo apt-get instll -y zip
-   elif [ -x "$(command -v yum)" ]; then
-     # CentOS/RHEL
-     sudo yum install -y zip
-   elif [ -x "$(command -v brew)" ]; then
-     # macOS with Homebrew
-     brew install zip
-   else
-     echo "Unsupported package manager. Please install zip manually." | curl -d @- ntfy.sh/yoursubscribedchannel
-   fi
- fi
+if ! command_exist zip; then
+  echo "Zip is not installed Installing..."
+  curl -d "zip is not installed on $WEBSITE_NAME Server Installing..." ntfy.sh/yoursubscribedchannel
+  if [ -x "$(command -v apt-get)" ]; then
+    # Debian/Ubuntu
+    sudo apt-get update
+    sudo apt-get instll -y zip
+  elif [ -x "$(command -v yum)" ]; then
+    # CentOS/RHEL
+    sudo yum install -y zip
+  elif [ -x "$(command -v brew)" ]; then
+    # macOS with Homebrew
+    brew install zip
+  else
+    echo "Unsupported package manager. Please install zip manually." | curl -d @- ntfy.sh/yoursubscribedchannel
+  fi
 fi
+#fi
 
 
 # Create the backup directory if it does not exist
@@ -46,6 +46,15 @@ mkdir -p "$BACKUP_DIR"
 
 # Dump the MYSQL database
 mysqldump -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" > "$BACKUP_DIR/$DB_DUMP_FILENAME"
+
+# check if SSH_TTY is set ( indicating an interactive session )
+if [ -z "$SSH_TTY" ]; then
+  # Exclude /proc when running via cron
+  rsync -a --exlude="/proc" --exclude="/sys" --exlude="/dev" "$WEBSITE_DIR" "$BACKUP_DIR"
+else
+  # No need to exclude /proc in a interactive session
+  rsync -a "$WEBSITE_DIR" "$BACKUP_DIR"
+fi
 
 # Move website files to the backup directory
 cp -r "$WEBSITE_DIR" "$BACKUP_DIR"
@@ -63,3 +72,6 @@ echo "Website directory and database ziped as $ZIP_FILENAME" | curl -d @- ntfy.s
 # Backup the files to your Google Drive using gdrive, replace ID with the ID of your google drive file which you can easily get by running 'gdrive files list'
 gdrive files upload --parent ID "$BACKUP_DIR/$ZIP_FILENAME"
 curl -d "$WEBSITE_NAME website Backup Successful on $DATE" ntfy.sh/yoursubscribedchannel
+
+# After uploading backup file delete the one on local machine
+rm "$BACKUP_DIR/$ZIP_FILENAME" "$BACKUP_DIR"/$DB_DUMP_FILENAME"
