@@ -50,7 +50,7 @@ mysqldump -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" > "$BACKUP_DIR/$DB_DUMP_FILENAME
 # check if SSH_TTY is set ( indicating an interactive session )
 if [ -z "$SSH_TTY" ]; then
   # Exclude /proc when running via cron
-  rsync -a --exlude="/proc" --exclude="/sys" --exlude="/dev" "$WEBSITE_DIR" "$BACKUP_DIR"
+  rsync -a --exclude="/proc" --exclude="/sys" --exlude="/dev" "$WEBSITE_DIR" "$BACKUP_DIR"
 else
   # No need to exclude /proc in a interactive session
   rsync -a "$WEBSITE_DIR" "$BACKUP_DIR"
