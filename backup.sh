@@ -48,13 +48,13 @@ mkdir -p "$BACKUP_DIR"
 mysqldump -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" > "$BACKUP_DIR/$DB_DUMP_FILENAME"
 
 # check if SSH_TTY is set ( indicating an interactive session )
-if [ -z "$SSH_TTY" ]; then
-  # Exclude /proc when running via cron
-  rsync -a --exclude="/proc" --exclude="/sys" --exlude="/dev" "$WEBSITE_DIR" "$BACKUP_DIR"
-else
-  # No need to exclude /proc in a interactive session
-  rsync -a "$WEBSITE_DIR" "$BACKUP_DIR"
-fi
+#if [ -z "$SSH_TTY" ]; then
+#  # Exclude /proc when running via cron
+#  rsync -a --exclude="/proc" --exclude="/sys" --exlude="/dev" "$WEBSITE_DIR" "$BACKUP_DIR"
+#else
+#  # No need to exclude /proc in a interactive session
+#  rsync -a "$WEBSITE_DIR" "$BACKUP_DIR"
+#fi
 
 # Move website files to the backup directory
 cp -r "$WEBSITE_DIR" "$BACKUP_DIR"
