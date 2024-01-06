@@ -2,7 +2,7 @@
 
 ## Overview
 
-Linux to Google Drive is a bash script that uses [Gdrive](https://github.com/glotlabs/gdrive) command line application to zip files you want also backup mysql database if you are backup a website and upload the ziped backup to your google drive account. You can automate this process by using cronjob to run the script at your selected dates.
+Linux to Google Drive is a bash script that uses [Gdrive](https://github.com/glotlabs/gdrive) command line application to zip files you want, it can also backup mysql database if you are backingup whole website and upload the ziped backup file to your google drive account. You can automate this process by using cronjob to run the script at your selected dates.
 
 ## Getting Started
 
